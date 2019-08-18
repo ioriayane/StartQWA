@@ -34,4 +34,6 @@ HEADERS += \
   fakesns4q.h \
   platform.h
 
+wasm:DEFINES += BUILD_FOR_WASM
+
 include(qhtml5file/qhtml5file.pri)

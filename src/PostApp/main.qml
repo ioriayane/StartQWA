@@ -2,8 +2,8 @@
 import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.3 as Dialogs
 import tech.relog.plugin.fakesns4q 1.0
-//import Qt.labs.platform 1.0 as Platform
 import tech.relog.plugin.platform 1.0
 
 Window {
@@ -80,9 +80,12 @@ Window {
           id: addImageButton
           text: qsTr("Add Image")
           onClicked: {
-            //            platform.fileOpenDialog()
-            //            openDialog.open()
-            htmlFileAccess.loadFsFile("*.jpg", "/tmp")
+            if(platform.type == "web"){
+              htmlFileAccess.loadFsFile("*.jpg", "/tmp")
+            }else{
+              fileDialog.fileOpen = true
+              fileDialog.open()
+            }
           }
         }
 
@@ -91,9 +94,14 @@ Window {
           enabled: textArea.text.length > 0
           text: qsTr("Save Draft")
           onClicked: {
-            var path = "/tmp/debug.txt"
-            platform.saveText(path, textArea.text)
-            htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
+            if(platform.type == "web"){
+              var path = "/tmp/debug.txt"
+              platform.saveText("file://" + path, textArea.text)
+              htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
+            }else{
+              fileDialog.fileOpen = false
+              fileDialog.open()
+            }
           }
         }
       }
@@ -104,18 +112,28 @@ Window {
     target: htmlFileAccess
     onFsFileReady: {
       var path = "file://" + tmpFilePath
+      console.debug(path)
       image.source = path
     }
   }
-  //  Platform.FileDialog {
-  //    id: openDialog
-  //    title: "Please select image file"
-  //    nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-  ////    modality: Qt.NonModal
-  //    modality: Qt.ApplicationModal
-  //    onAccepted: {
-  //      console.debug(file)
-  //      image.source = file
-  //    }
-  //  }
+  //デスクトップ用のファイルダイアログ
+  Dialogs.FileDialog {
+    id: fileDialog
+    property bool fileOpen: true
+    selectExisting: fileOpen
+    title: fileOpen ? "Please select image file" :
+                      "Please input file name"
+    nameFilters: fileOpen ? ["Image files (*.jpg *.png)", "All files (*)"] :
+                            ["Text files (*.txt)"]
+    onAccepted: {
+      console.debug(fileUrl)
+      if(fileOpen){
+        //開く
+        image.source = fileUrl
+      }else{
+        //保存
+        platform.saveText(fileUrl, textArea.text)
+      }
+    }
+  }
 }
