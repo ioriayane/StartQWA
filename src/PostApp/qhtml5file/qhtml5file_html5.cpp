@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2018 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
@@ -76,7 +76,8 @@ namespace {
 
         ::g_qtFileDataReadyCallback = fileDataReady;
         EM_ASM_({
-            const accept = Pointer_stringify($0);
+//            const accept = Pointer_stringify($0); //この関数は廃止されました
+            const accept = UTF8ToString($0);
 
             // Crate file file input which whil display the native file dialog
             var fileElement = document.createElement("input");
