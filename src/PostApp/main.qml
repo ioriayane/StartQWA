@@ -91,7 +91,13 @@ Window {
 
         Button {
           id: saveDraftButton
+          enabled: textArea.text.length > 0
           text: qsTr("Save Draft")
+          onClicked: {
+            var path = "/tmp/debug.txt"
+            platform.saveText(path, textArea.text)
+            htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
+          }
         }
       }
     }

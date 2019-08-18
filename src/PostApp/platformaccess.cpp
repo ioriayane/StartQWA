@@ -22,6 +22,19 @@ void PlatformAccess::fileOpenDialog()
   dlg->open();
 }
 
+void PlatformAccess::saveText(const QString &path, const QString &text)
+{
+  QFile file(path);
+  if(file.open(QFile::WriteOnly)){
+    qDebug() << path;
+    qDebug() << text;
+    QTextStream ts(&file);
+    ts.setCodec("UTF-8");
+    ts << text;
+    file.close();
+  }
+}
+
 QString PlatformAccess::selectedFile() const
 {
   return m_selectedFile;

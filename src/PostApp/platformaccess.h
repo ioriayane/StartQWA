@@ -14,6 +14,8 @@ public:
   explicit PlatformAccess(QObject *parent = nullptr);
 
   Q_INVOKABLE void fileOpenDialog();
+  Q_INVOKABLE void saveText(const QString &path, const QString &text);
+
   QString selectedFile() const;
 
 signals:
