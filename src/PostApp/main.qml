@@ -4,7 +4,7 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import tech.relog.plugin.fakesns4q 1.0
 //import Qt.labs.platform 1.0 as Platform
-import tech.relog.plugin.platformaccess 1.0
+import tech.relog.plugin.platform 1.0
 
 Window {
   visible: true
@@ -16,11 +16,8 @@ Window {
     id: fakeSns4Q
     userId: "123456789"
   }
-  PlatformAccess {
+  Platform {
     id: platform
-    onSelectedFileChanged: {
-      image.source = selectedFile
-    }
   }
 
   Dialog {
@@ -102,12 +99,11 @@ Window {
       }
     }
   }
+  //HTML側のファイルを開く処理のコールバック
   Connections {
     target: htmlFileAccess
     onFsFileReady: {
-      console.log("onFsFileReady " + tmpFilePath + " " + fileName)
       var path = "file://" + tmpFilePath
-      console.log(path)
       image.source = path
     }
   }

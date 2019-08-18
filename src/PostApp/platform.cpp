@@ -1,14 +1,14 @@
-﻿#include "platformaccess.h"
+﻿#include "platform.h"
 
 #include <QFileDialog>
 #include <QDebug>
 
-PlatformAccess::PlatformAccess(QObject *parent) : QObject(parent)
+Platform::Platform(QObject *parent) : QObject(parent)
 {
 
 }
 
-void PlatformAccess::fileOpenDialog()
+void Platform::fileOpenDialog()
 {
   QFileDialog *dlg = new QFileDialog();
 
@@ -22,7 +22,7 @@ void PlatformAccess::fileOpenDialog()
   dlg->open();
 }
 
-void PlatformAccess::saveText(const QString &path, const QString &text)
+void Platform::saveText(const QString &path, const QString &text)
 {
   QFile file(path);
   if(file.open(QFile::WriteOnly)){
@@ -35,12 +35,12 @@ void PlatformAccess::saveText(const QString &path, const QString &text)
   }
 }
 
-QString PlatformAccess::selectedFile() const
+QString Platform::selectedFile() const
 {
   return m_selectedFile;
 }
 
-void PlatformAccess::setSelectedFile(QString selectedFile)
+void Platform::setSelectedFile(QString selectedFile)
 {
   if (m_selectedFile == selectedFile)
     return;

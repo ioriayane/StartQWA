@@ -15,7 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         fakesns4q.cpp \
         main.cpp \
-        platformaccess.cpp
+        platform.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,6 +32,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
   fakesns4q.h \
-  platformaccess.h
+  platform.h
 
 include(qhtml5file/qhtml5file.pri)

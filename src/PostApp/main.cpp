@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "fakesns4q.h"
-#include "platformaccess.h"
+#include "platform.h"
 #include "qhtml5file/qhtmlfileaccess.h"
 
 int main(int argc, char *argv[])
@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 
   qmlRegisterType<FakeSns4Q>("tech.relog.plugin.fakesns4q"
                              , 1, 0, "FakeSns4Q");
-  qmlRegisterType<PlatformAccess>("tech.relog.plugin.platformaccess"
-                                  , 1, 0, "PlatformAccess");
+  qmlRegisterType<Platform>("tech.relog.plugin.platform"
+                                  , 1, 0, "Platform");
 
 
   QQmlApplicationEngine engine;

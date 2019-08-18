@@ -1,9 +1,9 @@
-﻿#ifndef PLATFORMACCESS_H
-#define PLATFORMACCESS_H
+﻿#ifndef PLATFORM_H
+#define PLATFORM_H
 
 #include <QObject>
 
-class PlatformAccess : public QObject
+class Platform : public QObject
 {
   Q_OBJECT
 
@@ -11,7 +11,7 @@ class PlatformAccess : public QObject
   QString m_selectedFile;
 
 public:
-  explicit PlatformAccess(QObject *parent = nullptr);
+  explicit Platform(QObject *parent = nullptr);
 
   Q_INVOKABLE void fileOpenDialog();
   Q_INVOKABLE void saveText(const QString &path, const QString &text);
@@ -25,4 +25,4 @@ public slots:
   void setSelectedFile(QString selectedFile);
 };
 
-#endif // PLATFORMACCESS_H
+#endif // PLATFORM_H
