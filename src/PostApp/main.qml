@@ -3,7 +3,8 @@ import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import tech.relog.plugin.fakesns4q 1.0
-import Qt.labs.platform 1.0 as Platform
+//import Qt.labs.platform 1.0 as Platform
+import tech.relog.plugin.platformaccess 1.0
 
 Window {
   visible: true
@@ -15,10 +16,16 @@ Window {
     id: fakeSns4Q
     userId: "123456789"
   }
+  PlatformAccess {
+    id: platform
+    onSelectedFileChanged: {
+      image.source = selectedFile
+    }
+  }
 
   Dialog {
     visible: true
-    modal: true
+    modal: false
     margins: 10
     closePolicy: Popup.NoAutoClose
 
@@ -75,7 +82,11 @@ Window {
         Button {
           id: addImageButton
           text: qsTr("Add Image")
-          onClicked: openDialog.open()
+          onClicked: {
+            //            platform.fileOpenDialog()
+            //            openDialog.open()
+            htmlFileAccess.loadFsFile("*.jpg", "/tmp")
+          }
         }
 
         Button {
@@ -85,14 +96,24 @@ Window {
       }
     }
   }
-
-  Platform.FileDialog {
-    id: openDialog
-    title: "Please select image file"
-    nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-    onAccepted: {
-      console.debug(file)
-      image.source = file
+  Connections {
+    target: htmlFileAccess
+    onFsFileReady: {
+      console.log("onFsFileReady " + tmpFilePath + " " + fileName)
+      var path = "file://" + tmpFilePath
+      console.log(path)
+      image.source = path
     }
   }
+  //  Platform.FileDialog {
+  //    id: openDialog
+  //    title: "Please select image file"
+  //    nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
+  ////    modality: Qt.NonModal
+  //    modality: Qt.ApplicationModal
+  //    onAccepted: {
+  //      console.debug(file)
+  //      image.source = file
+  //    }
+  //  }
 }
