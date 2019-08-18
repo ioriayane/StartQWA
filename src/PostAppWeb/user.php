@@ -3,7 +3,7 @@
   header("Access-Control-Allow-Origin: *");
 
   $id = $_GET["id"];
-  $name = "ハヤテ";
+  $name = "Hayate";
   $image = "https://qwa.relog.tech/sns/123456789.jpg";
 
   $array = ['id'=>$id, 'name'=>$name, 'image'=>$image];
