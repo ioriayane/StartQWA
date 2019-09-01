@@ -2,10 +2,10 @@
 
 #include <QFileDialog>
 #include <QDebug>
+#include <QStandardPaths>
 
 Platform::Platform(QObject *parent) : QObject(parent)
 {
-
 }
 
 void Platform::saveText(const QUrl &url, const QString &text)
@@ -20,12 +20,8 @@ void Platform::saveText(const QUrl &url, const QString &text)
   }
 }
 
-QString Platform::type() const
+QString Platform::tempLocation() const
 {
-#ifdef BUILD_FOR_WASM
-  return QStringLiteral("web");
-#else
-  return QStringLiteral("desktop");
-#endif
+  return QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 }
 

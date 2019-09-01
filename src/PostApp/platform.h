@@ -7,21 +7,18 @@ class Platform : public QObject
 {
   Q_OBJECT
 
-  Q_PROPERTY(QString type READ type)
+  Q_PROPERTY(QString tempLocation READ tempLocation)
 
 public:
   explicit Platform(QObject *parent = nullptr);
 
-  QString type() const;
+  QString tempLocation() const;
 
   Q_INVOKABLE void saveText(const QUrl &url, const QString &text);
 
 signals:
 
 public slots:
-
-private:
-  QString m_type;
 
 };
 
