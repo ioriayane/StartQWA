@@ -1,8 +1,4 @@
-﻿#ifdef BUILD_FOR_WASM
-#include <QGuiApplication>
-#else
-#include <QApplication>
-#endif
+﻿#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "fakesns4q.h"
@@ -13,11 +9,7 @@ int main(int argc, char *argv[])
 {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-#ifdef BUILD_FOR_WASM
-  QGuiApplication app(argc, argv);
-#else
   QApplication app(argc, argv);
-#endif
 
   qmlRegisterType<FakeSns4Q>("tech.relog.plugin.fakesns4q"
                              , 1, 0, "FakeSns4Q");

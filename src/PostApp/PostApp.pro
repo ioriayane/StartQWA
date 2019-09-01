@@ -1,5 +1,4 @@
-QT += quick
-!wasm { QT += widgets }
+QT += quick widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -35,5 +34,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-wasm:DEFINES+=BUILD_FOR_WASM
 include(qhtml5file/qhtml5file.pri)
