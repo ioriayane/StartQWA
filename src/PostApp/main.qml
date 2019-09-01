@@ -83,10 +83,11 @@ Window {
       //初期状態ではsourceは空白で何も表示しない
       Image {
         id: image
-        Layout.fillWidth: true
         Layout.minimumHeight: 0
         Layout.minimumWidth: 0
         Layout.maximumHeight: 200
+        Layout.maximumWidth: 200
+        Layout.alignment: Qt.AlignHCenter
         fillMode: Image.PreserveAspectFit
         source: ""
       }
