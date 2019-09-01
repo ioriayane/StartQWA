@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2018 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
@@ -39,24 +39,36 @@
 
 #include "qhtml5file.h"
 
-#include <QtCore/QTimer>
-
-// Non-operational cross platform stubs for thee QHtml5File file load/save API,
-// which compiling code that uses it also on non Q_OS_HTML5 platforms. 
-// TODO: QFileDialog fallback
+#include <QFileDialog>
+#include <QStandardPaths>
 
 void QHtml5File::load(const QString &accept, std::function<void(const QByteArray &, const QString &)> fileDataReady)
 {
-    qWarning("Non-operational cross platform QHtml5File::load() stub called; returning fake file");
-    Q_UNUSED(accept);
-    QTimer::singleShot(0, [=]() {
-        fileDataReady(QByteArray(), QStringLiteral("fakefile"));
-    });
+  //ファイルオープンダイアログを開く
+  QString file_path = QFileDialog::getOpenFileName(nullptr,
+                                QStringLiteral("Open"),
+                                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+                                QString("Files (%1)").arg(accept));
+  QFile file(file_path);
+  QFileInfo file_info(file_path);
+  if(file.open(QIODevice::ReadOnly)){
+    //選択されたファイルをQByteArrayで呼び出し元へ渡す
+    fileDataReady(file.readAll(), file_info.fileName());
+    file.close();
+  }
 }
 
 void QHtml5File::save(const QByteArray &contents, const QString &fileNameHint)
 {
-    qWarning("Non-operational cross platform QHtml5File::save() stub called; save has no effect.");
-    Q_UNUSED(contents);
-    Q_UNUSED(fileNameHint);
+  //ファイル保存ダイアログを開く
+  QString file_path = QFileDialog::getSaveFileName(nullptr,
+                        QStringLiteral("Save"),
+                        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/" + fileNameHint,
+                        QStringLiteral("All Files (*.*)"));
+  QFile file(file_path);
+  if(file.open(QIODevice::WriteOnly)){
+    //QByteArrayで受け取ったデータを指定のファイルに書き込む
+    file.write(contents);
+    file.close();
+  }
 }

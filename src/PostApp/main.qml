@@ -2,7 +2,6 @@
 import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
-import QtQuick.Dialogs 1.3 as Dialogs
 import tech.relog.plugin.fakesns4q 1.0
 import tech.relog.plugin.platform 1.0
 import msorvig.plugin.htmlfileaccess 1.0
@@ -84,12 +83,7 @@ Window {
           id: addImageButton
           text: qsTr("Add Image")
           onClicked: {
-            if(platform.type == "web"){
-              htmlFileAccess.loadFsFile("*.jpg", "/tmp")
-            }else{
-              fileDialog.fileOpen = true
-              fileDialog.open()
-            }
+            htmlFileAccess.loadFsFile("*.jpg", platform.tempLocation)
           }
         }
 
@@ -98,14 +92,9 @@ Window {
           enabled: textArea.text.length > 0
           text: qsTr("Save Draft")
           onClicked: {
-            if(platform.type == "web"){
-              var path = "/tmp/debug.txt"
-              platform.saveText("file://" + path, textArea.text)
-              htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
-            }else{
-              fileDialog.fileOpen = false
-              fileDialog.open()
-            }
+            var path = platform.tempLocation + "/debug.txt"
+            platform.saveText("file:///" + path, textArea.text)
+            htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
           }
         }
       }
@@ -115,29 +104,9 @@ Window {
   Connections {
     target: htmlFileAccess
     onFsFileReady: {
-      var path = "file://" + tmpFilePath
+      var path = "file:///" + tmpFilePath
       console.debug(path)
       image.source = path
-    }
-  }
-  //デスクトップ用のファイルダイアログ
-  Dialogs.FileDialog {
-    id: fileDialog
-    property bool fileOpen: true
-    selectExisting: fileOpen
-    title: fileOpen ? "Please select image file" :
-                      "Please input file name"
-    nameFilters: fileOpen ? ["Image files (*.jpg *.png)", "All files (*)"] :
-                            ["Text files (*.txt)"]
-    onAccepted: {
-      console.debug(fileUrl)
-      if(fileOpen){
-        //開く
-        image.source = fileUrl
-      }else{
-        //保存
-        platform.saveText(fileUrl, textArea.text)
-      }
     }
   }
 }
