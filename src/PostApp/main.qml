@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3 as Dialogs
 import tech.relog.plugin.fakesns4q 1.0
 import tech.relog.plugin.platform 1.0
+import msorvig.plugin.htmlfileaccess 1.0
 
 Window {
   visible: true
@@ -18,6 +19,9 @@ Window {
   }
   Platform {
     id: platform
+  }
+  HtmlFileAccess {
+    id: htmlFileAccess
   }
 
   Dialog {
