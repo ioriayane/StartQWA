@@ -1,8 +1,9 @@
 ﻿#include "platform.h"
 
-#include <QFileDialog>
-#include <QDebug>
+#include <QFile>
+#include <QUrl>
 #include <QStandardPaths>
+#include <QTextStream>
 
 Platform::Platform(QObject *parent) : QObject(parent)
 {
@@ -10,9 +11,9 @@ Platform::Platform(QObject *parent) : QObject(parent)
 
 void Platform::saveText(const QUrl &url, const QString &text)
 {
+  //テキストファイルに保存
   QFile file(url.toLocalFile());
   if(file.open(QFile::WriteOnly)){
-    qDebug() << url.toLocalFile();
     QTextStream ts(&file);
     ts.setCodec("UTF-8");
     ts << text;
@@ -22,6 +23,7 @@ void Platform::saveText(const QUrl &url, const QString &text)
 
 QString Platform::tempLocation() const
 {
+  //書き込み可能なテンポラリフォルダを取得
   return QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 }
 
