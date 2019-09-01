@@ -5,8 +5,9 @@
 
 FakeSns4Q::FakeSns4Q(QObject *parent) : QObject(parent)
 {
+  //ユーザー情報を取得できるまでのダミー画像
   setUserIcon("noimage.jpg");
-
+  //リクエストに対するレスポンスを受け取るためのシグナル・スロットを接続
   connect(&m_networkManager, &QNetworkAccessManager::finished
           , this, &FakeSns4Q::networkMangerfinished);
 }
@@ -34,7 +35,8 @@ void FakeSns4Q::setUserId(QString userId)
   m_userId = userId;
   emit userIdChanged(m_userId);
 
-  QUrl api = "https://qwa.relog.tech/sns/user.php?id=" + userId;
+  //ユーザーIDが変更されたら要求
+  QUrl api = "https://qwa.relog.tech/sns/user?id=" + userId;
   m_networkManager.get(QNetworkRequest(api));
 }
 
@@ -58,10 +60,12 @@ void FakeSns4Q::setUserIcon(QString userIcon)
 
 void FakeSns4Q::networkMangerfinished(QNetworkReply *reply)
 {
+  //受け取った内容を処理
   QByteArray data = reply->readAll();
   qDebug() << reply->url().toString();
   qDebug() << QString(data);
 
+  //JSONをパースしてプロパティに設定
   QJsonDocument doc(QJsonDocument::fromJson(data));
   QJsonObject obj(doc.object());
 
