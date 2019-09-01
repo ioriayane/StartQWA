@@ -17,6 +17,10 @@ SOURCES += \
         main.cpp \
         platform.cpp
 
+HEADERS += \
+  fakesns4q.h \
+  platform.h
+
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -29,11 +33,5 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-HEADERS += \
-  fakesns4q.h \
-  platform.h
-
-wasm:DEFINES += BUILD_FOR_WASM
 
 include(qhtml5file/qhtml5file.pri)
