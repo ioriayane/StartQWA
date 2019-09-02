@@ -114,7 +114,7 @@ Window {
           onClicked: {
             //テンポラリに一旦保存する
             var path = platform.tempLocation + "/debug.txt"
-            platform.saveText("file:///" + path, textArea.text)
+            platform.saveText(path, textArea.text)
             //HTMLとやり取りする機能の保存メソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
             htmlFileAccess.saveFsFile(path, "DraftMessage.txt")

@@ -9,10 +9,10 @@ Platform::Platform(QObject *parent) : QObject(parent)
 {
 }
 
-void Platform::saveText(const QUrl &url, const QString &text)
+void Platform::saveText(const QString &path, const QString &text)
 {
   //テキストファイルに保存
-  QFile file(url.toLocalFile());
+  QFile file(path);
   if(file.open(QFile::WriteOnly)){
     QTextStream ts(&file);
     ts.setCodec("UTF-8");

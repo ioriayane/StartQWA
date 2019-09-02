@@ -16,7 +16,7 @@ public:
   //プロパティのゲッター
   QString tempLocation() const;
   //テキストファイルを保存するメソッド
-  Q_INVOKABLE void saveText(const QUrl &url, const QString &text);
+  Q_INVOKABLE void saveText(const QString &path, const QString &text);
 
 signals:
 public slots:
