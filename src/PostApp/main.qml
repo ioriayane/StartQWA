@@ -56,7 +56,7 @@ Window {
           //情報が取得できれば自動で表示される
           source: fakeSns4Q.userIcon
         }
-
+        //ユーザー名の配置
         Label {
           id: userNameLabel
           Layout.fillWidth: true
@@ -65,7 +65,6 @@ Window {
           text: fakeSns4Q.userName
           font.pointSize: 12
         }
-
       }
       //メッセージを書き込むテキストエリア
       TextArea {
