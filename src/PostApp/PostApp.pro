@@ -35,3 +35,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 include(qhtml5file/qhtml5file.pri)
+
+wasm:DEFINES+=BUILD_FOR_WASM
