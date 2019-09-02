@@ -23,7 +23,8 @@ Window {
   HtmlFileAccess {
     id: htmlFileAccess
     onFsFileReady: {
-      //HTML側のファイルを開く処理のコールバック
+      //HTML側のファイルを開く処理のコールバック的なイベント処理
+      //ImageのsourceにはURI形式で指定する
       var path = "file:///" + tmpFilePath
       image.source = path
     }
