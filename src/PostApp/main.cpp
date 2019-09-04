@@ -7,7 +7,6 @@
 #include <QQmlContext>
 #include "fakesns4q.h"
 #include "platform.h"
-#include "qhtml5file/qhtmlfileaccess.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,8 +22,6 @@ int main(int argc, char *argv[])
                              , 1, 0, "FakeSns4Q");
   qmlRegisterType<Platform>("tech.relog.plugin.platform"
                                   , 1, 0, "Platform");
-  qmlRegisterType<QHtmlFileAccess>("msorvig.plugin.htmlfileaccess"
-                                   , 1, 0, "HtmlFileAccess");
 
   QQmlApplicationEngine engine;
   const QUrl url(QStringLiteral("qrc:/main.qml"));

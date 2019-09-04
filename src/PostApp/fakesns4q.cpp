@@ -3,10 +3,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#ifdef BUILD_FOR_WASM
-#include <emscripten.h>
-#endif
-
 FakeSns4Q::FakeSns4Q(QObject *parent) : QObject(parent)
 {
   //ユーザー情報を取得できるまでのダミー画像
@@ -70,24 +66,6 @@ void FakeSns4Q::networkMangerfinished(QNetworkReply *reply)
   qDebug() << reply->attribute(
                 QNetworkRequest::HttpStatusCodeAttribute).toInt();
   qDebug() << QString(data);
-
-#ifdef BUILD_FOR_WASM
-  EM_ASM({
-           var url = UTF8ToString($0);
-           var code = $1;
-           var json = UTF8ToString($2);
-           var elm = document.createElement("p");
-           elm.appendChild(document.createTextNode(url + "," + code));
-           document.body.appendChild(elm);
-           elm = document.createElement("p");
-           elm.appendChild(document.createTextNode(json));
-           document.body.appendChild(elm);
-           debugger;
-         }, reply->url().toString().toUtf8().constData()
-         , reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
-         , data.constData()
-         );
-#endif
 
   //JSONをパースしてプロパティに設定
   QJsonDocument doc(QJsonDocument::fromJson(data));

@@ -15,12 +15,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         fakesns4q.cpp \
-        main.cpp \
-        platform.cpp
+        main.cpp
 
 HEADERS += \
-  fakesns4q.h \
-  platform.h
+  fakesns4q.h
 
 RESOURCES += qml.qrc
 
@@ -35,5 +33,12 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-include(qhtml5file/qhtml5file.pri)
-wasm:DEFINES+=BUILD_FOR_WASM
+
+SOURCES += platform.cpp
+HEADERS += platform.h
+wasm {
+  DEFINES+=BUILD_FOR_WASM
+  SOURCES += platform_wasm.cpp
+} else {
+  SOURCES += platform_desktop.cpp
+}

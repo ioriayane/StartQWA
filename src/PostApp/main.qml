@@ -4,7 +4,6 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import tech.relog.plugin.fakesns4q 1.0
 import tech.relog.plugin.platform 1.0
-import msorvig.plugin.htmlfileaccess 1.0
 
 Window {
   visible: true
@@ -19,19 +18,14 @@ Window {
     //本来であれば何らかのイベントで設定される値
     userId: "123456789"
   }
-  //HTMLとやり取りしてファイルにアクセスする機能の配置
-  HtmlFileAccess {
-    id: htmlFileAccess
-    onFsFileReady: {
-      //HTML側のファイルを開く処理のコールバック的なイベント処理
-      //ImageのsourceにはURI形式で指定する
-      var path = "file:///" + tmpFilePath
-      image.source = path
-    }
-  }
   //その他機能の配置
   Platform {
     id: platform
+    onFileLoaded: {
+      var path = "file:///" + file_path
+      console.log(path)
+      image.source = path
+    }
   }
   //ブラウザ全体ではなく一部分を使用するイメージでQML的ダイアログ形式にする
   Dialog {
@@ -103,7 +97,7 @@ Window {
           onClicked: {
             //HTMLとやり取りする機能の読み込みメソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
-            htmlFileAccess.loadFsFile("*.jpg", platform.tempLocation)
+            platform.loadFile("*.jpg")
           }
         }
 
@@ -113,11 +107,11 @@ Window {
           text: qsTr("Save Draft")
           onClicked: {
             //テンポラリに一旦保存する
-            var path = platform.tempLocation + "/debug.txt"
+            var path = platform.tempLocation + "/postapp.txt"
             platform.saveText(path, textArea.text)
             //HTMLとやり取りする機能の保存メソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
-            htmlFileAccess.saveFsFile(path, "DraftMessage.txt")
+            platform.saveFile(path, "DraftMessage.txt")
           }
         }
       }
