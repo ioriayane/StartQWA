@@ -3,13 +3,17 @@
 #include <QDebug>
 #include <emscripten.h>
 
+//アプリ本体へコールバックするための関数ポインタ
 std::function<void(const char *, size_t, const char *)> g_fileLoaded = nullptr;
-extern "C" EMSCRIPTEN_KEEPALIVE void callFileLoaded(const char *data, size_t size, const char *file_name)
+//JavaScriptからコールバックされる関数
+extern "C" EMSCRIPTEN_KEEPALIVE
+void callFileLoaded(const char *data, size_t size, const char *file_name)
 {
-  qDebug() << "callFileLoaded";
+  qDebug() << "Callback from JavaScript";
 
-  if (g_fileLoaded == nullptr)
+  if(g_fileLoaded == nullptr){
     return;
+  }
 
   g_fileLoaded(data, size, file_name);
   g_fileLoaded = nullptr;
@@ -18,10 +22,10 @@ extern "C" EMSCRIPTEN_KEEPALIVE void callFileLoaded(const char *data, size_t siz
 void PlatformImpl::loadFile(const char *filter,
                             std::function<void(const char *, size_t, const char *)> fileLoaded)
 {
-  if(g_fileLoaded != nullptr)
+  if(g_fileLoaded != nullptr){
     qDebug() << "Already running";
     return;
-
+  }
   g_fileLoaded = fileLoaded;
 
   EM_ASM({
@@ -63,8 +67,6 @@ void PlatformImpl::loadFile(const char *filter,
     element.click();
 
   }, filter);
-
-  qDebug() << "loadFile 3";
 }
 
 void PlatformImpl::saveFile(const char *data, size_t size, const char *default_name)
