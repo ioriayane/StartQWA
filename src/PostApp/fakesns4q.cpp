@@ -62,9 +62,6 @@ void FakeSns4Q::networkMangerfinished(QNetworkReply *reply)
 {
   //受け取った内容を処理
   QByteArray data = reply->readAll();
-  qDebug() << reply->url().toString();
-  qDebug() << reply->attribute(
-                QNetworkRequest::HttpStatusCodeAttribute).toInt();
   qDebug() << QString(data);
 
   //JSONをパースしてプロパティに設定

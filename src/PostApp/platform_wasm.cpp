@@ -9,12 +9,11 @@ std::function<void(const char *, size_t, const char *)> g_fileLoaded = nullptr;
 extern "C" EMSCRIPTEN_KEEPALIVE
 void callFileLoaded(const char *data, size_t size, const char *file_name)
 {
-  qDebug() << "Callback from JavaScript";
+  qDebug() << "Call from JavaScript";
 
   if(g_fileLoaded == nullptr){
     return;
   }
-
   g_fileLoaded(data, size, file_name);
   g_fileLoaded = nullptr;
 }
@@ -43,7 +42,6 @@ void PlatformImpl::loadFile(const char *filter,
       var reader = new FileReader();
       //読み込み完了イベント
       reader.onload = function(){
-        const name = file.name;
         //読み込んだファイルのデータをバイト配列に変換
         var dataArray = new Uint8Array(reader.result);
         //領域の確保
@@ -56,7 +54,6 @@ void PlatformImpl::loadFile(const char *filter,
            [pointer, dataArray.length, file.name]);
         //解放
         Module._free(pointer);
-        reader = null;
       };
       //ファイルを読み込む
       reader.readAsArrayBuffer(file);

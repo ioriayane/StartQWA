@@ -5,6 +5,7 @@
 #include <functional>
 
 namespace PlatformImpl {
+  //プラットフォームごとの処理を書くための関数の宣言
   void loadFile(const char *filter,
                 std::function<void(const char *, size_t, const char *)> fileLoaded);
   void saveFile(const char *data, size_t size, const char *default_name);
