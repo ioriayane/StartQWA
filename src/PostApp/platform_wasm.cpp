@@ -1,7 +1,9 @@
 ﻿#include "platform.h"
 
+#include <emscripten.h>  //EM_ASMで必要！
+#include <QMimeDatabase>
+#include <QString>
 #include <QDebug>
-#include <emscripten.h>
 
 //アプリ本体へコールバックするための関数ポインタ
 std::function<void(const char *, size_t, const char *)> g_fileLoaded = nullptr;
@@ -18,25 +20,30 @@ void callFileLoaded(const char *data, size_t size, const char *file_name)
   g_fileLoaded = nullptr;
 }
 
-void PlatformImpl::loadFile(const char *filter,
+void PlatformImpl::loadFile(const QString &filter,
                             std::function<void(const char *, size_t, const char *)> fileLoaded)
 {
-  if(g_fileLoaded != nullptr){
-    qDebug() << "Already running";
-    return;
-  }
+  //ダイアログのフィルタ指定でMIMETYPEが必要なので変換
+  QMimeDatabase db;
+  QString filter_mime = db.mimeTypeForFile(filter).name();
+  //コールバック先の保存
   g_fileLoaded = fileLoaded;
 
   EM_ASM({
     //debugger;
     const filter = UTF8ToString($0);
-    //inputタグを作成してbody配下に追加
+    //inputタグを非表示で作成
     var element = document.createElement("input");
-    document.body.appendChild(element);
     element.type = "file";
     element.style = "display:none";
     element.accept = filter;
+    //body配下に追加
+    document.body.appendChild(element);
+    //選択したときのイベント
     element.onchange = function(event){
+      //ダイアログのキャンセル対策
+      if(event.target.files.length == 0) return;
+      //ファイルオブジェクト取得
       const file = event.target.files[0];
       //オブジェクト作成
       var reader = new FileReader();
@@ -63,10 +70,12 @@ void PlatformImpl::loadFile(const char *filter,
     //ダイアログ表示！
     element.click();
 
-  }, filter);
+  },
+  //JavaScriptへ渡す引数（const char*に変換）
+  filter_mime.toUtf8().constData());
 }
 
-void PlatformImpl::saveFile(const char *data, size_t size, const char *default_name)
+void PlatformImpl::saveFile(const QByteArray &data, const QString &default_name)
 {
   EM_ASM_({
     const data = $0;
@@ -76,17 +85,20 @@ void PlatformImpl::saveFile(const char *data, size_t size, const char *default_n
     const dataArray = Module.HEAPU8.subarray(data, data + size);
     //バイナリオブジェクトを作成
     const blob = new Blob([dataArray], {type:"application/octet-stream"});
-    //aタグを作成してbody配下に追加
+    //aタグを非表示で作成
     var element = document.createElement("a");
-    document.body.appendChild(element);
     element.download = default_name;
     element.style = "display:none";
     //BlobオブジェクトをダウンロードするためのURL作成
     element.href = window.URL.createObjectURL(blob);
+    //body配下に追加
+    document.body.appendChild(element);
     //リンクをクリック
     element.click();
     //タグを削除
     document.body.removeChild(element);
 
-  }, data, size, default_name);
+  },
+  //JavaScriptへ渡す引数（数値かconst char*に変換）
+  data.constData(), data.size(), default_name.toUtf8().constData());
 }

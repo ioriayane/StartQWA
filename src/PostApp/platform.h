@@ -6,9 +6,9 @@
 
 namespace PlatformImpl {
   //プラットフォームごとの処理を書くための関数の宣言
-  void loadFile(const char *filter,
+  void loadFile(const QString &filter,
            std::function<void(const char *, size_t, const char *)> fileLoaded);
-  void saveFile(const char *data, size_t size, const char *default_name);
+  void saveFile(const QByteArray &data, const QString &default_name);
 }
 
 class Platform : public QObject

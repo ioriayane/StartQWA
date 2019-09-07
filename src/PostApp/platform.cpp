@@ -30,13 +30,12 @@ void Platform::saveText(const QString &path, const QString &text)
 void Platform::loadFile(const QString &filter)
 {
   //プラットフォームごとの方法でデータを取得
-  PlatformImpl::loadFile(filter.toUtf8().constData(),
+  PlatformImpl::loadFile(filter,
                          [=](const char *data, size_t size, const char *file_name){
     //テンポラリフォルダに一時保存
     QString file_path = tempLocation() + "/" + QString(file_name);
     QFile file(file_path);
     if(file.open(QIODevice::WriteOnly)){
-      //QByteArrayで受け取ったデータを指定のファイルに書き込む
       file.write(data, size);
       file.close();
 
@@ -50,8 +49,7 @@ void Platform::saveFile(const QString &temp_file_path, const QString &default_na
   QFile file(temp_file_path);
   if(file.open(QIODevice::ReadOnly)){
     //プラットフォームごとの方法で保存
-    PlatformImpl::saveFile(file.readAll().constData(),
-                           static_cast<size_t>(file.size()),
+    PlatformImpl::saveFile(file.readAll(),
                            default_name.toUtf8().constData());
     //テンポラリのファイルを削除
     file.remove();
