@@ -67,6 +67,10 @@ Window {
         placeholderText: "input message ..."
         Layout.fillHeight: true
         Layout.fillWidth: true
+        background: Rectangle {
+          border.width: 1
+          border.color: textArea.focus ? "#111111" : "#bbbbbb"
+        }
       }
       //ユーザーが選択した画像を表示するエリア
       //初期状態ではsourceは空白で何も表示しない
