@@ -11,7 +11,8 @@ Platform::Platform(QObject *parent) : QObject(parent)
 QString Platform::saveText(const QString &file_name, const QString &text)
 {
   //テンポラリフォルダにテキストファイルを保存
-  QString path = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+  QString path
+      = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
       + "/" + file_name;
   QFile file(path);
   if(file.open(QFile::WriteOnly)){
