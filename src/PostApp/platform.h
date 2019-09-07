@@ -7,7 +7,7 @@
 namespace PlatformImpl {
   //プラットフォームごとの処理を書くための関数の宣言
   void loadFile(const char *filter,
-                std::function<void(const char *, size_t, const char *)> fileLoaded);
+           std::function<void(const char *, size_t, const char *)> fileLoaded);
   void saveFile(const char *data, size_t size, const char *default_name);
 }
 
@@ -27,7 +27,8 @@ public:
   Q_INVOKABLE void saveText(const QString &path, const QString &text);
 
   Q_INVOKABLE void loadFile(const QString &filter);
-  Q_INVOKABLE void saveFile(const QString &temp_file_path, const QString &default_name);
+  Q_INVOKABLE void saveFile(const QString &temp_file_path,
+                            const QString &default_name);
 
 signals:
   void fileLoaded(const QString &file_path);
