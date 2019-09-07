@@ -7,7 +7,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 
-//アプリ本体へコールバックするための関数ポインタ
+//アプリ本体へコールバックするための関数オブジェクト
 std::function<void(const char *, size_t, const char *)> g_fileLoaded = nullptr;
 //JavaScriptからコールバックされる関数
 extern "C" EMSCRIPTEN_KEEPALIVE
