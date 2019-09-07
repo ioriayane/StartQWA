@@ -8,21 +8,20 @@ Platform::Platform(QObject *parent) : QObject(parent)
 {
 }
 
-QString Platform::tempLocation() const
+QString Platform::saveText(const QString &file_name, const QString &text)
 {
-  //書き込み可能なテンポラリフォルダを取得
-  return QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-}
-
-void Platform::saveText(const QString &path, const QString &text)
-{
-  //テキストファイルに保存
+  //テンポラリフォルダにテキストファイルを保存
+  QString path = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+      + "/" + file_name;
   QFile file(path);
   if(file.open(QFile::WriteOnly)){
     QTextStream ts(&file);
     ts.setCodec("UTF-8");
     ts << text;
     file.close();
+    return path;
+  }else{
+    return QString();
   }
 }
 

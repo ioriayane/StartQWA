@@ -92,7 +92,7 @@ Window {
           id: addImageButton
           text: qsTr("Add Image")
           onClicked: {
-            //HTMLとやり取りする機能の読み込みメソッドを呼び出す
+            //HTMLとやり取りする機能の選択メソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
             platform.selectFile("*.jpg")
           }
@@ -103,9 +103,9 @@ Window {
           enabled: textArea.text.length > 0
           text: qsTr("Save Draft")
           onClicked: {
-            //テンポラリに一旦保存する
-            var path = platform.tempLocation + "/postapp.txt"
-            platform.saveText(path, textArea.text)
+            //テンポラリに一旦保存
+            var path
+            path = platform.saveText("postapp.txt", textArea.text)
             //HTMLとやり取りする機能の保存メソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
             platform.saveFile(path, "DraftMessage.txt")
