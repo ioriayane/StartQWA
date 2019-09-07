@@ -10,7 +10,11 @@ Window {
   width: 640
   height: 480
   title: qsTr("Post App")
-
+  //Webフォントの読み込み
+  FontLoader{
+    id:webFont
+    source: "http://mplus-fonts.osdn.jp/webfonts/general-j/mplus-1-light-sub.ttf"
+  }
   //SNSから情報を取得する機能の配置
   FakeSns4Q {
     id: fakeSns4Q
@@ -54,6 +58,7 @@ Window {
           //情報が取得できれば自動で表示される
           text: fakeSns4Q.userName
           font.pointSize: 12
+          font.family: webFont.name
         }
       }
       //メッセージを書き込むテキストエリア
@@ -63,6 +68,7 @@ Window {
         Layout.preferredWidth: 350
         text: qsTr("")
         font.pointSize: 11
+        font.family: jfont.name
         wrapMode: Text.WordWrap
         placeholderText: "input message ..."
         Layout.fillHeight: true
@@ -94,6 +100,7 @@ Window {
         //画像を追加するボタン
         Button {
           id: addImageButton
+          font.family: webFont.name
           text: qsTr("Add Image")
           onClicked: {
             //HTMLとやり取りする機能の選択メソッドを呼び出す
@@ -105,6 +112,7 @@ Window {
         Button {
           id: saveDraftButton
           enabled: textArea.text.length > 0
+          font.family: webFont.name
           text: qsTr("Save Draft")
           onClicked: {
             //テンポラリに一旦保存
