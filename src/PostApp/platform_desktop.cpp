@@ -4,7 +4,7 @@
 #include <QStandardPaths>
 
 void PlatformImpl::loadFile(const char *filter,
-                            std::function<void(const char *, size_t, const char *)> fileLoaded)
+                   std::function<void(const char *, size_t, const char *)> fileLoaded)
 {
   //ファイルオープンダイアログを開く
   QString file_path = QFileDialog::getOpenFileName(
@@ -24,13 +24,16 @@ void PlatformImpl::loadFile(const char *filter,
   }
 }
 
-void PlatformImpl::saveFile(const char *data, size_t size, const char *default_name)
+void PlatformImpl::saveFile(const char *data,
+                            size_t size,
+                            const char *default_name)
 {
   //ファイル保存ダイアログを開く
   QString file_path = QFileDialog::getSaveFileName(
         nullptr,
         QStringLiteral("Save"),
-        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/" + default_name,
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                         + "/" + default_name,
         QStringLiteral("All Files (*.*)"));
 
   QFile file(file_path);
