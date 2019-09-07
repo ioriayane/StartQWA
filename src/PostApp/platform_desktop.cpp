@@ -17,7 +17,8 @@ void Platform::selectFile(const QString &filter)
   }
 }
 
-void Platform::saveFile(const QString &temp_file_path, const QString &default_name)
+void Platform::saveFile(const QString &temp_file_path
+                        , const QString &default_name)
 {
   //ファイル保存ダイアログを開く
   QString file_path = QFileDialog::getSaveFileName(
