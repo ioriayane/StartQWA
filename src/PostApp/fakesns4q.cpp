@@ -36,7 +36,7 @@ void FakeSns4Q::setUserId(QString userId)
   emit userIdChanged(m_userId);
 
   //ユーザーIDが変更されたら要求
-  QUrl api = "https://qwa.relog.tech/sns/user?id=" + userId;
+  QUrl api("https://qwa.relog.tech/sns/user?id=" + userId);
   m_networkManager.get(QNetworkRequest(api));
 }
 
