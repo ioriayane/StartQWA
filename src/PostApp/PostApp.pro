@@ -42,20 +42,3 @@ wasm {
 } else {
   SOURCES += platform_desktop.cpp
 }
-
-# update html file
-update_html.target = update_html
-update_html.commands = sed -i s/qtlogo.svg/$${TARGET}.png/g $$OUT_PWD/$${TARGET}.html >&2
-QMAKE_EXTRA_TARGETS += update_html
-# copy logo file
-copy_logo.target = copy_logo
-copy_logo.commands = $(COPY) $$shell_path($$PWD/$${TARGET}.png) $$shell_path($$OUT_PWD)
-copy_logo.depends = update_html
-QMAKE_EXTRA_TARGETS += copy_logo
-
-contains(QMAKE_HOST.os, Windows){
-  QMAKE_POST_LINK += mingw32-make copy_logo
-}else{
-  QMAKE_POST_LINK += make copy_logo
-}
-
