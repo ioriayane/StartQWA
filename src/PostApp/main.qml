@@ -13,7 +13,8 @@ Window {
   //Webフォントの読み込み
   FontLoader{
     id:webFont
-    source: "http://mplus-fonts.osdn.jp/webfonts/general-j/mplus-1-light-sub.ttf"
+    source: "http://mplus-fonts.osdn.jp/webfonts/general-j/" +
+            "mplus-1-light-sub.ttf"
   }
   //SNSから情報を取得する機能の配置
   FakeSns4Q {
@@ -68,7 +69,7 @@ Window {
         Layout.preferredWidth: 350
         text: qsTr("")
         font.pointSize: 11
-        font.family: jfont.name
+        font.family: webFont.name
         wrapMode: Text.WordWrap
         placeholderText: "input message ..."
         Layout.fillHeight: true
