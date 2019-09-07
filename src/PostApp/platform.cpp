@@ -1,8 +1,7 @@
 ﻿#include "platform.h"
 
-#include <QFile>
-#include <QUrl>
 #include <QStandardPaths>
+#include <QFile>
 #include <QTextStream>
 
 Platform::Platform(QObject *parent) : QObject(parent)
@@ -27,33 +26,16 @@ void Platform::saveText(const QString &path, const QString &text)
   }
 }
 
-void Platform::loadFile(const QString &filter)
+QString Platform::selectedFile() const
 {
-  //プラットフォームごとの方法でデータを取得
-  PlatformImpl::loadFile(filter,
-                         [=](const char *data, size_t size, const char *file_name){
-    //テンポラリフォルダに一時保存
-    QString file_path = tempLocation() + "/" + QString(file_name);
-    QFile file(file_path);
-    if(file.open(QIODevice::WriteOnly)){
-      file.write(data, size);
-      file.close();
-
-      emit fileLoaded(file_path);
-    }
-  });
+  return m_selectedFile;
 }
 
-void Platform::saveFile(const QString &temp_file_path, const QString &default_name)
+void Platform::setSelectedFile(QString selectedFile)
 {
-  QFile file(temp_file_path);
-  if(file.open(QIODevice::ReadOnly)){
-    //プラットフォームごとの方法で保存
-    PlatformImpl::saveFile(file.readAll(),
-                           default_name.toUtf8().constData());
-    //テンポラリのファイルを削除
-    file.remove();
-  }
+  if (m_selectedFile == selectedFile)
+    return;
+
+  m_selectedFile = selectedFile;
+  emit selectedFileChanged(m_selectedFile);
 }
-
-

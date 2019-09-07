@@ -4,6 +4,7 @@
 #include <QMimeDatabase>
 #include <QString>
 #include <QDebug>
+#include <QFile>
 
 //アプリ本体へコールバックするための関数ポインタ
 std::function<void(const char *, size_t, const char *)> g_fileLoaded = nullptr;
@@ -20,14 +21,24 @@ void callFileLoaded(const char *data, size_t size, const char *file_name)
   g_fileLoaded = nullptr;
 }
 
-void PlatformImpl::loadFile(const QString &filter,
-                            std::function<void(const char *, size_t, const char *)> fileLoaded)
+void Platform::selectFile(const QString &filter)
 {
+  //コールバック先の保存処理をラムダ式で用意
+  g_fileLoaded = [=](const char *data, size_t size, const char *file_name){
+    //テンポラリフォルダに一時保存
+    QString file_path = tempLocation() + "/" + QString(file_name);
+    QFile file(file_path);
+    if(file.open(QIODevice::WriteOnly)){
+      file.write(data, size);
+      file.close();
+      //選択したファイルのプロパティへ設定（QMLへ通知される）
+      setSelectedFile(file_path);
+    }
+  };
+
   //ダイアログのフィルタ指定でMIMETYPEが必要なので変換
   QMimeDatabase db;
   QString filter_mime = db.mimeTypeForFile(filter).name();
-  //コールバック先の保存
-  g_fileLoaded = fileLoaded;
 
   EM_ASM({
     //debugger;
@@ -75,30 +86,38 @@ void PlatformImpl::loadFile(const QString &filter,
   filter_mime.toUtf8().constData());
 }
 
-void PlatformImpl::saveFile(const QByteArray &data, const QString &default_name)
+void Platform::saveFile(const QString &temp_file_path, const QString &default_name)
 {
-  EM_ASM_({
-    const data = $0;
-    const size = $1;
-    const default_name = UTF8ToString($2);
-    //C++の領域からバイト配列に変換
-    const dataArray = Module.HEAPU8.subarray(data, data + size);
-    //バイナリオブジェクトを作成
-    const blob = new Blob([dataArray], {type:"application/octet-stream"});
-    //aタグを非表示で作成
-    var element = document.createElement("a");
-    element.download = default_name;
-    element.style = "display:none";
-    //BlobオブジェクトをダウンロードするためのURL作成
-    element.href = window.URL.createObjectURL(blob);
-    //body配下に追加
-    document.body.appendChild(element);
-    //リンクをクリック
-    element.click();
-    //タグを削除
-    document.body.removeChild(element);
+  QFile file(temp_file_path);
+  if(file.open(QIODevice::ReadOnly)){
+    const QByteArray &data = file.readAll();
+    //ファイルを開いて読み込めたらブラウザに処理してもらう
+    EM_ASM_({
+      const data = $0;
+      const size = $1;
+      const default_name = UTF8ToString($2);
+      //C++の領域からバイト配列に変換
+      const dataArray = Module.HEAPU8.subarray(data, data + size);
+      //バイナリオブジェクトを作成
+      const blob = new Blob([dataArray], {type:"application/octet-stream"});
+      //aタグを非表示で作成
+      var element = document.createElement("a");
+      element.download = default_name;
+      element.style = "display:none";
+      //BlobオブジェクトをダウンロードするためのURL作成
+      element.href = window.URL.createObjectURL(blob);
+      //body配下に追加
+      document.body.appendChild(element);
+      //リンクをクリック
+      element.click();
+      //タグを削除
+      document.body.removeChild(element);
 
-  },
-  //JavaScriptへ渡す引数（数値かconst char*に変換）
-  data.constData(), data.size(), default_name.toUtf8().constData());
+    },
+    //JavaScriptへ渡す引数（数値かconst char*に変換）
+    data.constData(), data.size(), default_name.toUtf8().constData());
+
+    //テンポラリのファイルを削除
+    file.remove();
+  }
 }

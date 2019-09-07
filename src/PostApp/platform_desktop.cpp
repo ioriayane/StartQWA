@@ -3,8 +3,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 
-void PlatformImpl::loadFile(const QString &filter,
-                   std::function<void(const char *, size_t, const char *)> fileLoaded)
+void Platform::selectFile(const QString &filter)
 {
   //ファイルオープンダイアログを開く
   QString file_path = QFileDialog::getOpenFileName(
@@ -12,19 +11,13 @@ void PlatformImpl::loadFile(const QString &filter,
         QStringLiteral("Open"),
         QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
         QString("Files (%1)").arg(filter));
-
-  QFile file(file_path);
-  QFileInfo file_info(file_path);
-  if(file.open(QIODevice::ReadOnly)){
-    //選択されたファイルをQByteArrayで呼び出し元へ渡す
-    fileLoaded(file.readAll().constData()
-               , static_cast<size_t>(file.size())
-               , file_info.fileName().toUtf8().constData());
-    file.close();
+  //選択していたらファイルのプロパティへ設定（QMLへ通知される）
+  if(!file_path.isEmpty()){
+    setSelectedFile(file_path);
   }
 }
 
-void PlatformImpl::saveFile(const QByteArray &data, const QString &default_name)
+void Platform::saveFile(const QString &temp_file_path, const QString &default_name)
 {
   //ファイル保存ダイアログを開く
   QString file_path = QFileDialog::getSaveFileName(
@@ -33,11 +26,10 @@ void PlatformImpl::saveFile(const QByteArray &data, const QString &default_name)
         QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
                                          + "/" + default_name,
         QStringLiteral("All Files (*.*)"));
-
-  QFile file(file_path);
-  if(file.open(QIODevice::WriteOnly)){
-    //QByteArrayで受け取ったデータを指定のファイルに書き込む
-    file.write(data);
-    file.close();
+  //コピー機能は上書きできないので予め消す
+  if(QFile::exists(file_path)){
+    QFile::remove(file_path);
   }
+  //指定の場所に移動
+  QFile::rename(temp_file_path, file_path);
 }

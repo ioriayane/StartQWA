@@ -18,14 +18,9 @@ Window {
     //本来であれば何らかのイベントで設定される値
     userId: "123456789"
   }
-  //その他機能の配置
+  //プラットフォーム機能の配置
   Platform {
     id: platform
-    onFileLoaded: {
-      var path = "file:///" + file_path
-      console.log(path)
-      image.source = path
-    }
   }
   //ブラウザ全体ではなく一部分を使用するイメージでQML的ダイアログ形式にする
   Dialog {
@@ -83,7 +78,9 @@ Window {
         Layout.maximumWidth: 200
         Layout.alignment: Qt.AlignHCenter
         fillMode: Image.PreserveAspectFit
-        source: ""
+        //ダイアログで選択したパスがセットされたら表示
+        source: platform.selectedFile.length > 0 ?
+                  "file:///" + platform.selectedFile : ""
       }
 
       RowLayout {
@@ -97,7 +94,7 @@ Window {
           onClicked: {
             //HTMLとやり取りする機能の読み込みメソッドを呼び出す
             //ビルドがデスクトップでもQWAでも共通
-            platform.loadFile("*.jpg")
+            platform.selectFile("*.jpg")
           }
         }
 
