@@ -120,8 +120,7 @@ Window {
   //Webフォントの読み込み
   FontLoader{
     id:webFont
-    source: "http://mplus-fonts.osdn.jp/webfonts/general-j/" +
-            "mplus-1-light-sub.ttf"
+    source: "https://qwa.relog.tech/font/mplus-1-light-sub.ttf"
   }
   //Webフォントの読み込みが完了したらフォント設定を切り替える
   StateGroup {
