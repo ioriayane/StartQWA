@@ -14,11 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        fakesns4q.cpp \
         main.cpp
-
-HEADERS += \
-  fakesns4q.h
 
 RESOURCES += qml.qrc
 
@@ -34,8 +30,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 
-SOURCES += platform.cpp
-HEADERS += platform.h
+SOURCES += \
+        platform.cpp \
+        fakesns4q.cpp
+HEADERS += \
+        platform.h \
+        fakesns4q.h
 wasm {
   DEFINES+=BUILD_FOR_WASM
   SOURCES += platform_wasm.cpp
