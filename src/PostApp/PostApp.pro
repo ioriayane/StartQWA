@@ -42,3 +42,5 @@ wasm {
 } else {
   SOURCES += platform_desktop.cpp
 }
+
+TRANSLATIONS += postapp_ja_JP.ts

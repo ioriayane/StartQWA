@@ -7,6 +7,9 @@
 #include <QQmlContext>
 #include "fakesns4q.h"
 #include "platform.h"
+#include <QtCore/QTranslator>
+#include <QObject>
+#include <QtDebug>
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +25,13 @@ int main(int argc, char *argv[])
                              , 1, 0, "FakeSns4Q");
   qmlRegisterType<Platform>("tech.relog.plugin.platform"
                                   , 1, 0, "Platform");
+
+  QTranslator translator;
+//  translator.load(QString("postapp_%1").arg(QLocale::system().name()), QStringLiteral(":/"));
+  translator.load(QString("postapp_ja_JP"), QStringLiteral(":/"));
+  app.installTranslator(&translator);
+
+  qDebug() << QObject::tr("test") << QLocale::system().name();
 
   QQmlApplicationEngine engine;
   const QUrl url(QStringLiteral("qrc:/main.qml"));

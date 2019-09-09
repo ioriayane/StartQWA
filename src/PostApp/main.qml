@@ -4,12 +4,14 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 import tech.relog.plugin.fakesns4q 1.0
 import tech.relog.plugin.platform 1.0
+import QtQuick.Controls.Material 2.1
 
 Window {
   visible: true
   width: 640
   height: 480
   title: qsTr("Post App")
+
   //SNSから情報を取得する機能の配置
   FakeSns4Q {
     id: fakeSns4Q
@@ -66,10 +68,10 @@ Window {
         placeholderText: "input message ..."
         Layout.fillHeight: true
         Layout.fillWidth: true
-        background: Rectangle {
-          border.width: 1
-          border.color: textArea.focus ? "#111111" : "#bbbbbb"
-        }
+//        background: Rectangle {
+//          border.width: 1
+//          border.color: textArea.focus ? "#111111" : "#bbbbbb"
+//        }
       }
       //ユーザーが選択した画像を表示するエリア
       //初期状態ではsourceは空白で何も表示しない
@@ -133,6 +135,14 @@ Window {
         }
         PropertyChanges {
           target: textArea
+          font.family: webFont.name
+        }
+        PropertyChanges {
+          target: addImageButton
+          font.family: webFont.name
+        }
+        PropertyChanges {
+          target: saveDraftButton
           font.family: webFont.name
         }
       }
